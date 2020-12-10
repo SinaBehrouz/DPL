@@ -1,0 +1,67 @@
+<!--Note to self, to-do: Need to format and clean up. This is only functional, not clean and does not have proper styling-->
+{% extends "layout.html" %}
+{% block content %}
+  <!--Notifications-->
+  <div class="content-section">
+    <h3 class="notification-title">My Notifications</h3>
+    {% for notification in unread_notifications %}
+    <!-- cannot seem to make notification display tag work, even after adding it to css -->
+      <article class="media content-section" id="comment-display">
+        <div class="media-body">
+            <div class="article-metadata">
+              <!--Notification Message-->
+              <b><a class="mr-20" href="#">{{ notification.notification_message }}</a></b>
+              <div class="dropdown show">
+                <!--Notification Date Date-->
+                <small class="text-muted">{{ notification.date_created.strftime('%Y-%m-%d %H:%M') }}</small>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-md deleteButton">Accept</button>
+            <button class="btn btn-primary btn-md deleteButton">Decline</button>
+        </div>
+      </article>
+    {% endfor %}
+    {% for notification in read_notifications %}
+    <!-- cannot seem to make notification display tag work, even after adding it to css -->
+      <article class="media content-section" id="comment-display">
+        <div class="media-body">
+            <div class="article-metadata">
+              <!--Notification Message-->
+              <a class="mr-20" href="#">{{ notification.notification_message }}</a>
+              <div class="dropdown show">
+                <!--Notification Date Date-->
+                <small class="text-muted">{{ notification.date_created.strftime('%Y-%m-%d %H:%M') }}</small>
+              </div>
+            </div>
+            <a class="btn btn-info btn-sm mt-1 mb-1" style="background:green!important;"
+               href="{{ url_for('AcceptRegRequest') }}">Accept</a>
+
+             <a class="btn btn-info btn-sm mt-1 mb-1" style="background:red!important;"
+                href="{{ url_for('RejectRegRequest') }}">Reject</a>
+
+            <button class="btn btn-primary btn-md" style="
+                        border: none;
+                        background-color: inherit;
+                        padding: 14px 28px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        display: inline-block;
+                        color:green;" >Accept</button>
+            <button class="btn btn-primary btn-md" style="
+                        border: none;
+                        background-color: inherit;
+                        padding: 14px 28px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        display: inline-block;
+                        color:red;">Decline</button>
+        </div>
+      </article>
+    {% endfor %}
+    {% if not unread_notifications%}
+      {% if not read_notifications%}
+        <p>You have no notifications.</p>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endblock content %}

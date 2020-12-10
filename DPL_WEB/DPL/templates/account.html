@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!--Account Profile-->
+<div class="content-section">
+    <div class="media">
+        <img alt="User's display pic" class="rounded-circle article-img user_image"
+             src="{{ url_for('static', filename='user_images/' + account.user_image) }}">
+        <div class="media-body">
+            <h2 class="account-heading">{{ account.first_name }} {{ account.last_name }}</h2>
+            <span class="heading"><b>Username: </b>{{ account.username }}</span><br>
+            <span class="heading"><b>Email: </b>{{ account.email }}</span><br>
+            <span class="heading"><b>Phone Number: </b>{{ account.phone_number }}</span><br>
+            <span class="heading"><b>Postal Code: </b>{{ account.postal_code }}</span><br>
+            <a class="btn btn-info btn-sm mt-1 mb-1"
+               href="{{ url_for('edit_account') }}">Edit Profile</a>
+        </div>
+    </div>
+</div>
+c<div class="content-section">
+    <h3 class="comments-title">To-Do List</h3>
+        {% if not to_do %}
+            <p>You have no items in your to-do list.</p>
+        {% else %}
+            {% for post in to_do %}
+                <p><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></p>
+            {% endfor %}
+        {% endif %}
+</div>
+{% endblock content %}

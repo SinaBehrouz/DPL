@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+  <h1>Your Delivery</h1>
+  <article class="media content-section home-post">
+              <img alt="User's display pic" class="rounded-circle article-img user_image" src="{{ url_for('static', filename='user_images/' + delivery.deliv_user.user_image) }}">
+              <div class="media-body">
+                  <div class="article-metadata">
+                      <a class="mr-2" href="{{ url_for('other_account', user_id=delivery.deliv_user.id) }}">{{ delivery.deliv_user.username }}</a>
+                      <div>
+                        <small class="text-muted">{{delivery.date_posted.strftime('%Y-%m-%d')}}</small>
+                        <small class="text-muted">  |  </small>
+                        {% if delivery.status == 0%}
+                        <small class="open-status text-muted">In-Transit</small>
+                        {% elif delivery.status == 1%}
+                        <small class="open-status text-muted">Delivered!</small>
+                        {% elif delivery.status == 2%}
+                        <small class="open-status text-muted">Picked-Up!</small>
+                        {% elif delivery.status == 3%}
+                        <small class="open-status text-muted">Cancelled!</small>
+                        {% endif %}
+                      </div>
+                  </div>
+                  <h6><b style="font-weight:bold;">Title:</b><a class="article-title" href="#" style="font-weight:300;">{{ delivery.title }}</a></h6>
+                  <h6><b style="font-weight:bold;">Tracking Number:</b><a class="article-title" href="#" style="font-weight:300;">{{ delivery.tracking_number }}</a></h6>
+                  <h6><b style="font-weight:bold;">Your Passcode:</b><a class="article-title" href="#" style="font-weight:300;">{{ delivery.passcode }}</a></h6>
+                  <h6><b style="font-weight:bold;">Courier Passcode:</b><a class="article-title" href="#" style="font-weight:300;">{{ Courier_passcode }}</a></h6>
+                  <div>
+                    {%if delivery.status == 0%}
+                    <p class="article-content">Your package is in transit. You will be notified about any updates for your package! </p>
+                    {%elif delivery.status == 1%}
+                    <p class="article-content">Your Package has been delivered and is awaiting pick up!</p>
+                    {%elif delivery.status == 2%}
+                    <p class="article-content">Your package has been picked up! </p>
+                    {%elif delivery.status == 3%}
+                    <p class="article-content">Your package was cancelled!</p>
+                    {% endif %}
+                  </div>
+                  {%if delivery.status != 2%}
+                  <img class="mx-auto" width="200" height="200" src="{{ url_for('static', filename = 'QR/'+delivery.passcode+'.png') }}" alt="QR Image"/>
+                  {% else %}
+                  <!-- @todo: use actual images -->
+                  <!-- <img class="mx-auto" width="200" height="200" src="{{ url_for('static', filename = 'pickupImages/'+'default.png') }}" alt="QR Image"/> -->
+                  <img class="mx-auto" width="200" height="200" src="{{ url_for('static', filename = 'pickupImages/'+delivery.passcode+'.jpg') }}" alt="QR Image"/>
+
+                  {% endif %}
+              </div>
+
+    </article>
+
+</div>
+{% endblock content %}

@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h3>Your delivery request has been Successful!</h3>
+  <h5 style="font-weight: lighter;" >Please provide the courier with the following pass code for reference: <b>{{Couries_passcode}}</b></h5>
+  <h5></h5>
+  <h5 style="font-weight: lighter;" >Please keep this passcode to access the station: <b>{{User_passcode}}</b></h5>
+
+  <img class="mx-auto" width="200" height="200" src="{{ url_for('static', filename = 'QR/'+User_passcode+'.png') }}" alt="QR Image"/>
+
+  <small>We have mailed you theses information as well!</small>
+{% endblock %}

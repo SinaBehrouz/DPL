@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>DPL Stations based on your relative area</h2>
+<h5>please pick the one belonging to your entity</h5>
+    {% for station in stations %}
+        <article class="media content-section home-post">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="{{ url_for('RequestDPLStation', dpl_id=station.station_id, _uid=current_user.id) }}">DPL Station ID: #{{ station.station_id }}</a>
+                    <small class="text-muted"> <b> {{ station.city }}</b> </small>
+                </div>
+                <h3><a class="article-title" href="#">{{ station.address }}| {{ station.city }} | {{ station.postal_code }}</a></h3>
+              </div>
+        </article>
+      {% endfor %}
+
+{% endblock content %}

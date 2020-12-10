@@ -1,0 +1,168 @@
+{% extends "layout.html" %}
+{% block content %}
+<!--Google Map-->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ2UdTtgsGg7Jbx7UmtnGPFh_pVRi2n4U&libraries=places&callback=initAutocomplete" async defer></script>
+<script type="text/javascript" src="{{ url_for('static', filename='JS/post.js') }}"></script>
+
+  <!--Posts-->
+  <article class="media content-section">
+    <img alt="User's display pic" class="rounded-circle article-img user_image" src="{{ url_for('static', filename='user_images/' + post.author.user_image) }}">
+    <div class="media-body">
+      <!--Post Top Bar-->
+      <div class="article-metadata">
+
+        <!--Post Author-->
+        <a class="mr-2" href="{{ url_for('other_account', user_id=post.author.id) }}">{{ post.author.username }}</a>
+
+        <div class="dropdown show">
+          <!--Post Date-->
+          <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+          <small>|</small>
+          <small class="text-muted"><b>{{ post.category.name }}</b></small>
+          <small>|</small>
+          <!--Post Status-->
+          {% if post.status.name == "OPEN" %}
+            <small class="open-status text-muted">{{ post.status.name }}</small>
+          {% elif post.status.name == "TAKEN" %}
+            <small class="taken-status text-muted">{{ post.status.name }}</small>
+          {% elif post.status.name == "CANCELLED" %}
+            <small class="canclled-status text-muted">{{ post.status.name }}</small>
+          {% elif post.status.name == "CLOSED"%}
+            <small class="closed-status text-muted">{{ post.status.name }}</small>
+          {% endif %}
+          <!--Post Update Options-->
+          {% if post.author == current_user %}
+          <small>|</small>
+          <a class="" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>EDIT</small></a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="{{ url_for('update_post', post_id=post.id) }}">Edit</a>
+            {% if post.status.name == 'OPEN' %}
+              <a class="dropdown-item" href="{{ url_for('close_post', post_id=post.id) }}">Close</a>
+            {% elif post.status.name == 'CLOSED' %}
+              <a class="dropdown-item" href="{{ url_for('open_post', post_id=post.id) }}">Open</a>
+            {% endif %}
+            <button type="button" class="dropdown-item" data-toggle="modal" data-target="#deleteModal">Delete</button>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <h5 class="article-content" id="post_title"><b>{{ post.title }}</b></h5>
+      <p class="article-content" id="post_content">{{ post.description }}</p>
+        {% if post.author != current_user %}
+          <div>
+            <!--Volunteer Button-->
+            {% if post.volunteer == current_user.id %}
+              <a class="btn btn-danger btn-sm mt-1 mb-1" href="{{ url_for('unvolunteer', post_id=post.id) }}">Unvolunteer</a>
+            {% else %}
+              <a class="btn btn-success btn-sm mt-1 mb-1"  href="{{ url_for('volunteer', post_id=post.id) }}">Volunteer</a>
+            {% endif %}
+            <!-- Create a new Button for Message -->
+            <a class="btn btn-info btn-sm mt-1 mb-1" href="{{ url_for('create_new_chat_channel', cmt_auth_id=post.user_id) }}">Message</a>
+          </div>
+        {% endif %}
+    </div>
+  </article>
+
+  <!--Comments-->
+  <div class="content-section">
+    <h3 class="comments-title">Comments</h3>
+    {% for comment in comments %}
+      <article class="media content-section comment-display">
+        <div class="media-body">
+            <div class="article-metadata">
+              <!--Comment Author-->
+              <a class="mr-20" href="{{ url_for('other_account', user_id=comment.cmt_author.id) }}">{{ comment.cmt_author.username }}</a>
+              <div class="dropdown show">
+                <!--Comment Date-->
+                <small class="text-muted">{{ comment.date_posted.strftime('%Y-%m-%d') }}</small>
+
+                <!--Comment Update Options-->
+                {% if comment.cmt_author == current_user %}
+                  <small>|</small>
+                  <button type="button" class="deleteButton" data-toggle="modal" data-target="#deleteComment-{{comment.id}}">DELETE</button>
+                {% else %}
+                  <small>|</small>
+                  <!-- Change to POST instead of a href-->
+                  <a class="" href="{{ url_for('create_new_chat_channel', cmt_auth_id=comment.cmt_author.id) }}"><small>MESSAGE</small></a>
+                {% endif %}
+              </div>
+              <!--Delete Specific Comment Popup-->
+              <div class="modal fade" id="deleteComment-{{comment.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteCommentLabel">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteCommentLabel">Delete Comment?</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <form action="{{ url_for('delete_comment', post_id=post.id, comment_id=comment.id) }}" method="POST">
+                        <input class="btn btn-danger" type="submit" value="Delete Comment">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="article-content comment-desc-display">{{ comment.comment_desc }}</p>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+
+  <!--Leave a comment-->
+  <div class="content-section">
+    <h4> Leave a comment </h4>
+    <form action="{{ url_for('create_new_comment', post_id=post.id) }}" method="POST">
+      {{ form.hidden_tag() }}
+      <fieldset class="form-group">
+        <div class ="form-group required">
+              {{ form.comment_desc.label(class="form-control-label") }}
+              {% if form.comment_desc.errors %}
+                  {{ form.comment_desc(class="form-control form-control-lg is-invalid") }}
+                  <div class="invalid-feedback">
+                      {% for error in form.comment_desc.errors %}
+                          <span>{{ error }}</span>
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  {{ form.comment_desc(class="form-control form-control-lg") }}
+              {% endif %}
+        </div>
+        <div class="form-group">
+          {{ form.submit_comment(class="btn btn-outline-info") }}
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+  <!--Delete Post Popup-->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="media content-section grid">
+    <h3 class="comments-title grid-r-1"> Relevant locations have been displayed</h3>
+    <input id="autocomplete" class="control form-control form-control-lg search-bar" type="text" placeholder="Search Items based on Locations"/>
+    <iframe id="map" class="article-content" width="690" height="450" src={{ a }} allowfullscreen> </iframe>
+  </div>
+
+{% endblock content %}

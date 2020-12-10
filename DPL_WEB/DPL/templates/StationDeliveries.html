@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+{% if not deliveries%}
+<article class="media content-section">
+  <h5>You have no Deliveries. You can <a href="{{ url_for('create_new_post') }}">request deliveries</a> at any time!</h5>
+</article>
+{%else%}
+  {%for delivery in deliveries%}
+  <article class="media content-section home-post">
+              <img alt="User's display pic" class="rounded-circle article-img user_image" src="{{ url_for('static', filename='user_images/' + delivery.deliv_user.user_image) }}">
+              <div class="media-body">
+                  <div class="article-metadata">
+                      <a class="mr-2" href="{{ url_for('other_account', user_id=delivery.deliv_user.id) }}">{{ delivery.deliv_user.username }}</a>
+                      <div>
+                        <small class="text-muted">{{delivery.date_posted.strftime('%Y-%m-%d')}}</small>
+                        <small class="text-muted">  |  </small>
+
+                        {% if delivery.status == 0%}
+                        <small class="open-status text-muted">In-Transit</small>
+                        {% elif delivery.status == 1%}
+                        <small class="open-status text-muted">Delivered!</small>
+                        {% elif delivery.status == 2%}
+                        <small class="open-status text-muted">Picked-Up!</small>
+                        {% elif delivery.status == 3%}
+                        <small class="open-status text-muted">Cancelled!</small>
+                        {% endif %}
+
+                        <a class="btn btn-info btn-sm mt-1 mb-1" style="background:#d12a0d!important;"
+                           href="{{ url_for('cancelDelivery', delivery_id=delivery.delivery_id) }}">Cancel Delivery</a>
+                      </div>
+                  </div>
+                  <h6></h6>
+                  <h6><b> Title: </b><a class="article-title" href="{{url_for('deliveryIdSee', delivery_id=delivery.delivery_id)}}" style="font-weight: 300;">{{ delivery.title }}</a></h6>
+                  <h6><b> Tracking Number: </b><a class="article-title" href="{{url_for('deliveryIdSee', delivery_id=delivery.delivery_id)}}" style="font-weight: 300;">{{ delivery.tracking_number }}</a></h6>
+                  <h6><b> Description: </b><a class="article-title" href="{{url_for('deliveryIdSee', delivery_id=delivery.delivery_id)}}" style="font-weight: 300;">{{ delivery.description}}</a></h6>
+                  <!-- <p class="article-content">Your post is still in progress and is not shipped yet!</p> -->
+              </div>
+    </article>
+
+  {%endfor%}
+{% endif %}
+  {% endblock %}

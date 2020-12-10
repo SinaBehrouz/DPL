@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>My Stations: </h2>
+    {% for station in stations %}
+        <article class="media content-section home-post">
+          <!-- uncomment to display users image -->
+            <!-- <img alt="User's display pic" class="rounded-circle article-img user_image" src="{{ url_for('static', filename='user_images/' + current_user.user_image) }}"> -->
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="{{url_for('StationDeliveries')}}">DPL Station ID: #{{ station.station_id }}</a>
+                    <small class="text-muted"> <b> {{ station.city }}</b> </small>
+                </div>
+                <h3><a class="article-title" href="#">{{ station.address }} | {{ station.postal_code }}</a></h3>
+                <!-- <h3><a class="article-title" href="#">{{ station.postal_code }}</a></h3> -->
+                <h6>Total Lockers: {{ station.total_lockers }}</h6>
+                <h6>Available Lockers: {{ station.lockers_available }}</h6>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
