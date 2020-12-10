@@ -1,0 +1,18 @@
+PyQt5==5.15.0
+SQLAlchemy==1.2.7
+
+imutils==0.5.3
+pyzbar==0.1.8
+
+#serial==0.0.97
+pyserial==3.4
+
+#Libraries needed: 
+python-serial
+wiringpi
+python-pip
+python3-pip
+RPi.GPIO
+opencv
+libzbar0
+pyzbar
