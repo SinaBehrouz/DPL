@@ -19,7 +19,7 @@ class slaveController():
             self.port = Serial("/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0", 9600)
         except:
             print ("Cannot establish Serial connection to specified port")
-            # exit()
+            exit()
 
 
     def __del__(self):
@@ -68,7 +68,7 @@ class slaveController():
             sleep(2)
         return True
 
-# uncomment codes below to hardware locks
+# uncomment codes below to test this file
 # lockNum = int(input("Which locker do you want to unlock? "))
 # s = slaveController()
 # s.unlock_lock(lockNum)
