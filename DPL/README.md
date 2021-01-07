@@ -1,8 +1,8 @@
 # DPL
 
-## About
-Source code for DPL station (Alpha Phase code)
-For Final Product Code and specification please contact us.
+## Note
+This is a source code for the Alpha version and is lacking many of the essential and improved features.
+The final product source code is proprietary.
 
 ## Instructions
 Assuming user already has python3 and python3-pip installed.

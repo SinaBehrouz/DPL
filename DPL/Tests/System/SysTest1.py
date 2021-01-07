@@ -69,12 +69,3 @@ def fill():
 
 def checkpasscode(_passcode):
     query = Session.query(Deliveries).filter_by(passcode = _passcode).first()
-
-#to get Items
-    # Session.query(User).filter_by(id = 1).first()
-    #
-    # x = User(email = "123@123.com")
-    # Session.add(x)
-    # Session.commit()
-    #
-    #Base.metadata.create_all(engine)

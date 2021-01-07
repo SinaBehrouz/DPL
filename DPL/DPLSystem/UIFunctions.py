@@ -40,10 +40,8 @@ class UIHandler():
 
     def verifyCameraRecordings(self):
         os.system('python3 DPLSystem/Scanner/Scanner.py')
-        try:
-            f = open("finish.txt", 'r')
-        except:
-            print('FUCKL CANT OPEN THJE FILES')
+        f = open("finish.txt", 'r')
+
 
         data = f.readline()
         print("data = ",data)
